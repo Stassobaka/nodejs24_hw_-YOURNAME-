@@ -9,23 +9,18 @@ function logger(moduleName) {
         info: function (...message){
             if (logLevel === 'info') {
                 colorsEnabled ?  console.log (chalk.blue(moduleName), ...message) : console.log(moduleName, ...message);
-                this.warn;
-                this.error;
             }
             if(logLevel === undefined){
                 colorsEnabled ?  console.log (chalk.blue(moduleName), ...message) : console.log(moduleName, ...message);
-                this.error;
             }
         },
 
         warn: function (...message){
             if (logLevel === 'warn' || logLevel === 'info' ) {
                 colorsEnabled ?  console.log (chalk.yellow(moduleName), ...message) : console.log(moduleName, ...message);
-                this.error;
             }
             if(logLevel === undefined){
                 colorsEnabled ?  console.log (chalk.yellow(moduleName), ...message) : console.log(moduleName, ...message);
-                this.error;
             }
         },
 
@@ -35,7 +30,6 @@ function logger(moduleName) {
             }
             if(logLevel === undefined){
                 colorsEnabled ?  console.log (chalk.red(moduleName), ...message) : console.log(moduleName, ...message);
-                this.error;
             }
         },
     }
