@@ -12,7 +12,7 @@ function logger(moduleName) {
                 this.error;
             }
             if(process.env.LOG_LEVEL === undefined){
-                process.env.COLORS_ENABLED === '1' ?  console.log (chalk.blue(moduleName), ...message) : console.log(moduleName, ...message);
+                this.warn;
                 this.error;
             }
         },
