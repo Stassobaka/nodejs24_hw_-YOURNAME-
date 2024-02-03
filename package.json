@@ -4,17 +4,13 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./main.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Stassobaka/nodejs24_hw_-YOURNAME-.git"
-  },
-  "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Stassobaka/nodejs24_hw_-YOURNAME-/issues"
-  },
-  "homepage": "https://github.com/Stassobaka/nodejs24_hw_-YOURNAME-#readme"
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "config": "^3.3.10",
+    "dotenv": "^16.4.1"
+  }
 }
