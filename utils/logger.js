@@ -10,13 +10,6 @@ function logger(moduleName) {
             if (logLevel === 'info') {
                 colorsEnabled ?  console.log (chalk.blue(moduleName), ...message) : console.log(moduleName, ...message);
             }
-            if(process.env.LOG_LEVEL === undefined){
-                this.warn;
-                this.error;
-            }
-            if(logLevel === undefined){
-                colorsEnabled ?  console.log (chalk.blue(moduleName), ...message) : console.log(moduleName, ...message);
-            }
         },
 
         warn: function (...message){
