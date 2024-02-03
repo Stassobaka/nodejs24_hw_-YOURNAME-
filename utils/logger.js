@@ -1,4 +1,3 @@
-require('dotenv').config();
 const chalk = require('chalk');
 
 function logger(moduleName) {
