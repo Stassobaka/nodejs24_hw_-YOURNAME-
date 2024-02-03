@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const logger = require('./utils/logger')('main');
 
 logger.info('This is info');
