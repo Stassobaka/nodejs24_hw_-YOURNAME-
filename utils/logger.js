@@ -8,29 +8,21 @@ function logger(moduleName) {
     return {
         info: function (...message){
             if (logLevel === 'info') {
-                colorsEnabled ?  console.log (chalk.blue(moduleName), ...message) : console.log(moduleName, ...message);
-            }
-            if(logLevel === undefined){
+                // працює тільки коли в process.env.LOG_LEVEL значення 'info'
                 colorsEnabled ?  console.log (chalk.blue(moduleName), ...message) : console.log(moduleName, ...message);
             }
         },
 
         warn: function (...message){
-            if (logLevel === 'warn' || logLevel === 'info' ) {
-                colorsEnabled ?  console.log (chalk.yellow(moduleName), ...message) : console.log(moduleName, ...message);
-            }
-            if(logLevel === undefined){
+            if (logLevel === 'warn' || logLevel === 'info' || logLevel === undefined) {
+                // працює коли в process.env.LOG_LEVEL значення 'info', 'warn' або нічого
                 colorsEnabled ?  console.log (chalk.yellow(moduleName), ...message) : console.log(moduleName, ...message);
             }
         },
 
         error: function (...message){
-            if (logLevel === 'error' || logLevel === 'warn' || logLevel === 'info' ) {
-                colorsEnabled ?  console.log (chalk.red(moduleName), ...message) : console.log(moduleName, ...message);
-            }
-            if(logLevel === undefined){
-                colorsEnabled ?  console.log (chalk.red(moduleName), ...message) : console.log(moduleName, ...message);
-            }
+            // працює завжди, по умовах задачі у нас немає випадків коли метод error() має бути відключений
+            colorsEnabled ?  console.log (chalk.red(moduleName), ...message) : console.log(moduleName, ...message);
         }
     }
 }
