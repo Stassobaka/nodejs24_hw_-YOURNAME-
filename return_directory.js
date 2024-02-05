@@ -22,9 +22,8 @@ function deleteDirectory(directoryToDelete){
                 if(err){
                     findFilesToDelete(absoluteDirectory)
                 }else{
-                    console.log(result)
-                    result.forEach((item)=>{               
-                        fs.stat( directoryToDelete, (err, stats)=>{
+                    result.forEach((item)=>{  
+                        fs.stat(path.join(directoryToDelete, item) , (err, stats)=>{
                             if(err){
                                 logger.error('Ошибка содержания деректории', err) 
                                 }else {
@@ -32,8 +31,8 @@ function deleteDirectory(directoryToDelete){
                                         fs.rmdir(item, (err)=>{
                                             if(err){
                                                 logger.warn('Директория не пустая')
-                                                   deleteDirectory( item)
-                                                console.log(directoryToDelete)
+                                                   deleteDirectory( path.join(directoryToDelete, item))
+                                                   findFilesToDelete(absoluteDirectory)
                                             }else{
                                                 logger.info(`Директория ${path.resolve(item)}`)
                                             }
