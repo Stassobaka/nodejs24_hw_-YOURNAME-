@@ -42,6 +42,9 @@ const fileSync = {
 
                 if (result.includes(nameDirectory)) {
                     logger.warn(`Папка ${nameDirectory} сдержится в каталоге`)
+                    const includDirectory = path.join(oldDirectory,nameDirectory )
+                    const icludSecondDirectory = path.join(linkDirectory,nameDirectory )
+                    findFile(includDirectory, icludSecondDirectory )    
                 }else{
                     const newDirectory = path.join(linkDirectory, nameDirectory);
                     fs.mkdir(newDirectory, (err) => {
