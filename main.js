@@ -9,7 +9,7 @@ const fileSync = require('./fileSync')
 // logger.warn('This is Warn');
 
 
-// returnDefault.clean() // Очистка папок от всех файлов к начальным условиям задачи
+returnDefault.clean() // Очистка папок от всех файлов к начальным условиям задачи
 
 // returnDefault.default() // Запись файлов по условию задачи
 
