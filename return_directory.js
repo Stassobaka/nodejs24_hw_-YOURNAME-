@@ -1,122 +1,116 @@
 const fs = require('fs');
 const path = require('path');
+const logger = require('./utils/logger')('main');
 
 
 const returnDefault = {
     clean:  function(){
         const source  = 'source';
         const target = 'target';
-        const subdir = 'subdir';
-
-
+        const absoluteDirectory = '.'
 const absolutePathSource = path.resolve(source);
 const absolutePathTarget = path.resolve(target);
-const absolutePathSubdir = path.resolve(source,subdir);
 
+function deleteDirectory(directoryToDelete){
+    fs.rmdir(directoryToDelete,(err, result)=>{
+        if(result){
+            logger.info(`Директория ${directoryToDelete} удалена`)
+        }
+        if(err){
+            fs.readdir(directoryToDelete, (err, result)=>{
+                if(err){
+                    logger.error('Не найдена директория')  
+                }else{
+                    result.forEach((item)=>{               
+                        fs.stat(path.join(directoryToDelete, item), (err, stats)=>{
+                            if(err){
+                                logger.error('Ошибка содержания деректории', err) 
+                                }else {
+                                    if(stats.isDirectory()){
+                                        fs.rmdir(path.resolve(item), (err)=>{
+                                            if(err){
+                                                logger.warn('Директория не пустая')
+                                                findFilesToDelete(directoryToDelete)
+                                                console.log(path.resolve(directoryToDelete))
+                                            }else{
+                                                logger.info(`Директория ${path.resolve(item)}`)
+                                            }
+                                        })
+                                    }
+                                    if(stats.isFile()){
+                                        fs.unlink(path.join(directoryToDelete, item), (err)=>{
+                                            if(err){
+                                                logger.error(`Не удалось удалить файл ${path.resolve(item)}`)
+                                            }else{
+                                                logger.info(`Файл ${path.resolve(item)} удален`)
+                                            }
+                                        })
+                                    }
+                                        
+                                    
+                                }
+                            })
+                        })
+                        
+                    }
+                })
 
- fs.readdir(absolutePathSource,  (err, nameFile) => {
-    if (err) {
-        console.log('Помилка при читанні директорії:', err);
-    } else {
-        async function deleteFile(filePath) {
-            try {
-                fs.unlink(filePath, err => console.log(err));
-                console.log(`Файл ${filePath} видалено успішно.`);
-            } catch (err) {
-                console.error(`Помилка при видаленні файлу ${filePath}:`, err);
-            }
         }
 
-        nameFile.forEach(async (file) => {
-            const filePath = path.join(absolutePathSource, file);
-    
-            try {
-                const stats = await fs.promises.stat(filePath);
-    
-                if (stats.isFile()) {
-                    await deleteFile(filePath)
-                }
-            } catch (error) {
-                console.error(`Помилка при отриманні інформації про файл ${filePath}:`, error);
-            }
-        });
+    })
+
+
+   
     }
-});
 
- fs.readdir(absolutePathTarget, async (err, nameFile) => {
-    if (err) {
-        console.log('Помилка при читанні директорії:', err);
-    } else {
-        async function deleteFile(filePath) {
-            try {
-               fs.unlink(filePath, err => console.log(err));
-                console.log(`Файл ${filePath} видалено успішно.`);
-            } catch (err) {
-                console.error(`Помилка при видаленні файлу ${filePath}:`, err);
-            }
-        }
 
-        nameFile.forEach(async (file) => {
-            const filePath = path.join(absolutePathTarget, file);
+
+function findFilesToDelete(directory){
     
-            try {
-                const stats = await fs.promises.stat(filePath);
-    
-                if (stats.isFile()) {
-                    await deleteFile(filePath)
-                }
-                if (stats.isDirectory()){
-                    await  deleteDirectory(filePath)
-                }
-            } catch (error) {
-                console.error(`Помилка при отриманні інформації про файл ${filePath}:`, error);
-            }
-            async function deleteDirectory(directoryPath) {
-                try {
-                    await fs.promises.rmdir(directoryPath, { recursive: true });
-                    console.log(`Директорія ${directoryPath} успішно видалена.`);
-                } catch (error) {
-                    console.error(`Помилка при видаленні директорії ${directoryPath}:`, error);
-                }
-            }
-        });
-    }
-});
+        fs.readdir(directory, (err, result)=>{
+            if(err){
+                logger.error('Не найдена директория')
+            }else{
+                if (result.includes(source)) {
+                    fs.rmdir(path.resolve(source), (err)=>{
+                        if(err){
+                            deleteDirectory(source) 
+                        }else{
+                            logger.info(`${source} удалено`)
+                        }
 
- fs.readdir(absolutePathSubdir, async (err, nameFile) => {
-    if (err) {
-        console.log('Помилка при читанні директорії:', err);
-    } else {
-        async function deleteFile(filePath) {
-            try {
-                fs.unlink(filePath, err => console.log(err));
-                console.log(`Файл ${filePath} видалено успішно.`);
-            } catch (err) {
-                console.error(`Помилка при видаленні файлу ${filePath}:`, err);
-            }
-        }
-
-        nameFile.forEach(async (file) => {
-            const filePath = path.join(absolutePathSubdir, file);
-    
-            try {
-                const stats = await fs.promises.stat(filePath);
-    
-                if (stats.isFile()) {
-                    await deleteFile(filePath)
+                    })
+                      
                 }
-            } catch (error) {
-                console.error(`Помилка при отриманні інформації про файл ${filePath}:`, error);
-            }
-        });
-    }
-});
-},
-  
+                if (result.includes(target)) {
+                    fs.rmdir(path.resolve(target), (err)=>{
+                        if(err){
+                            deleteDirectory(target) 
+                        }else{
+                            logger.info(`${target} удалено`)
+                        }
 
-    default: async function(){
-      
+                    })
+                }else{
+                    logger.info('Все папки удалены')
+                }
+            
+            }
+
+    })
+    
+
+}
+
+
+
+findFilesToDelete(absoluteDirectory)
+    },
+
+    default:  function(){
+   
         const files = ['E:\\nodejs24_hw_YOURNAME\\source\\.gitkeep',
+        'E:\\nodejs24_hw_YOURNAME\\target\\',
         'E:\\nodejs24_hw_YOURNAME\\target\\.gitkeep',
         'E:\\nodejs24_hw_YOURNAME\\source\\subdir\\.gitkeep',
         'E:\\nodejs24_hw_YOURNAME\\source\\.file_1',
