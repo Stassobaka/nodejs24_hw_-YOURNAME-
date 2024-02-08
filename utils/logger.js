@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const loggerStream = require('../loggerStream')
 
 function logger(moduleName) {
     const logLevel = process.env.LOG_LEVEL;
@@ -10,6 +11,7 @@ function logger(moduleName) {
             if (logLevel === 'info') {
                 colorsEnabled ?  console.log (chalk.blue(moduleName), ...message) : console.log(moduleName, ...message);
             }
+            loggerStream.writeStream(...message)
         },
 
         warn: function (...message){
