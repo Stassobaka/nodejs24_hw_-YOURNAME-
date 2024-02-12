@@ -16,6 +16,14 @@ fs.mkdirSync(logFolderPath, { recursive: true }); // флаг 'recursive' доз
 const infoLogStream = fs.createWriteStream(path.join(logFolderPath, 'info.log'), { flags: 'a' });
 const errorLogStream = fs.createWriteStream(path.join(logFolderPath, 'errors.log'), { flags: 'a' });
 
+/*
+  4. Додаємо закриття стрімов при виході із програми
+*/
+process.on('beforeExit', () => {
+    infoLogStream.end();
+    errorLogStream.end();
+});
+
 
 function logger(moduleName) {
     const logLevel = process.env.LOG_LEVEL;
