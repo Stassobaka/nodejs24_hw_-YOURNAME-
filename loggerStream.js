@@ -6,31 +6,23 @@ const {Writable} = require('stream')
 const loggerStream = {
 
 
-    creatDirectory: function (){
-   
-     
-       function  creatDirectory(){
-            fs.readdir('.', (err, result)=>{
-                console.log(result)
+    creatDirectory:   function (){
+
+        async function  creatDirectory(){
+            fs.readdir('.',  function (err, result){
                 if(err){
                     console.log('error')
                 }else{
-                    if(!result.includes('logs')){
-                        fs.mkdir('logs' ,(err)=>{
-                            if(err){
+                     if( !result.includes('logs')){
+                         fs.mkdir('logs' , function (err){
+                              if(err){
                                 console.log('Директория Logs не создана',err)
-                            }else{
+                              }else{
                                 createFile()
-                            }})             
-                        
-                    }else{
-                        console.log(`Директория ${path.resolve('logs')} существует `)
-                        createFile()
+                              }})             
                     }
                 }
             })
-
-
         }
 
         function createFile(){
@@ -43,39 +35,26 @@ const loggerStream = {
                 if(err){
                     console.log('Файл errors не создан',err)
                 }
-
            })
            
            
         }
-
-
-creatDirectory()
-
-
+        setTimeout(creatDirectory,500)
     },
 
-    writeLoggerInfo:function(...message){
+    writeLoggerInfo:   function (...message){
 
-
-        
         const info = [...message]
             const logInfo = path.join('logs','info.log')
-            const writeStream = fs.createWriteStream(logInfo, {encoding: 'utf8', flags: 'a'})
-            writeStream.on('open', () => {
-        info.forEach((item) => {
-            console.log(item);
-            writeStream.write('Info:' + item + '\n', (err) => {
+             const writeStream = fs.createWriteStream(logInfo, {encoding: 'utf8', flags: 'a'})
+             const currentDate = new Date();
+             const options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' };
+             const formattedDate = new Intl.DateTimeFormat('en-US', options).format(currentDate);
+
+             info.forEach((item) => {
+            writeStream.write(`Info: ${item}  ${formattedDate}` +'\n', (err) => {
                 if (err) console.log('Error writing to stream:', err);
             });
-        });
-        writeStream.on('close', () => {
-            console.log('Stream closed');
-        });
-        writeStream.end();
-        writeStream.on('error', (err) => {
-            console.log('Stream error:', err);
-        });
         
 })
        
@@ -87,38 +66,31 @@ creatDirectory()
         const info = [...message];
         const logInfo = path.join('logs', 'errors.log');
         const writeStream = fs.createWriteStream(logInfo, { encoding: 'utf8', flags: 'a' });
-        writeStream.on('open', () => {
+        const currentDate = new Date();
+        const options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' };
+        const formattedDate = new Intl.DateTimeFormat('en-US', options).format(currentDate);
+
+      
             info.forEach((item) => {
-                console.log(item);
-                writeStream.write('warn:' + item + '\n', (err) => {
+                writeStream.write(`Warn: ${item}  ${formattedDate}  `+'\n', (err) => {
                     if (err) console.log('Error writing to stream:', err);
                 });
-            });
-            writeStream.end();
-
-        });
-
-        writeStream.on('error', (err) => {
-            console.log('Stream error:', err);
-        });
-
+            })
     },
 
     writeLoggerError: function(...message){
         const info = [...message];
-        const logInfo = path.join('logs', 'errors.log');
-        
+        const logInfo = path.join('logs', 'errors.log');     
         const writeStream = fs.createWriteStream(logInfo, { encoding: 'utf8', flags: 'a' });
- 
-        writeStream.on('open', () => {
-            info.forEach((item) => {
-                console.log(item);
-                writeStream.write('Error:' + item + '\n', (err) => {
+        const currentDate = new Date();
+        const options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' };
+        const formattedDate = new Intl.DateTimeFormat('en-US', options).format(currentDate);
+
+              info.forEach((item) => {
+                writeStream.write(`Error: ${item}  ${formattedDate}`  +'\n', (err) => {
                     if (err) console.log('Error writing to stream:', err);
                 });
-            });
-            writeStream.end();
-            writeStream.on('error', (err) => {
+                     writeStream.on('error', (err) => {
                 console.log('Stream error:', err);
             });
         });
