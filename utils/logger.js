@@ -10,6 +10,12 @@ const path = require('path');
 const logFolderPath = path.join('.', 'logs');
 fs.mkdirSync(logFolderPath, { recursive: true }); // флаг 'recursive' дозволяє не викидати помилку якщо папка вже є
 
+/*
+  2. тепер, коли папка у нас точно є (бо ми ж в синхронному режимі зараз!) - відкриваєм два файлстріма
+*/
+const infoLogStream = fs.createWriteStream(path.join(logFolderPath, 'info.log'), { flags: 'a' });
+const errorLogStream = fs.createWriteStream(path.join(logFolderPath, 'errors.log'), { flags: 'a' });
+
 
 function logger(moduleName) {
     const logLevel = process.env.LOG_LEVEL;
