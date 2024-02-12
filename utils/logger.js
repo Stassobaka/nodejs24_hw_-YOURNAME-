@@ -1,4 +1,15 @@
 const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
+
+/*
+  1. Нам потрібно створити папку для логів, якщо її немає. Згадуємо що код в модулі (той який не експортується нікуди)
+  виконується один раз при ініціалізації. І те що модулі підгружаються синхронно. Це значить, що отут зараз ми можемо
+  перевірити і створити папку для логів СИНХРОННО (це той випадок, коли це ОК)
+*/
+const logFolderPath = path.join('.', 'logs');
+fs.mkdirSync(logFolderPath, { recursive: true }); // флаг 'recursive' дозволяє не викидати помилку якщо папка вже є
+
 
 function logger(moduleName) {
     const logLevel = process.env.LOG_LEVEL;
