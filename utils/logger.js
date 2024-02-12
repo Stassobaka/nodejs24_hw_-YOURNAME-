@@ -24,6 +24,10 @@ function logger(moduleName) {
 
     return {
         info: function (...message){
+            // 3a. Ми пишемо в файли завжди, значить робимо це тут, без перевірки лог левела
+            const fileMessage = `${new Date().toISOString()}: ${JSON.stringify(message)}\n`;
+            infoLogStream.write(fileMessage);
+
             if (logLevel === 'info') {
                 // працює тільки коли в process.env.LOG_LEVEL значення 'info'
                 colorsEnabled ?  console.log (chalk.blue(moduleName), ...message) : console.log(moduleName, ...message);
@@ -31,6 +35,10 @@ function logger(moduleName) {
         },
 
         warn: function (...message){
+            // 3b. Ми пишемо в файли завжди, значить робимо це тут, без перевірки лог левела
+            const fileMessage = `${new Date().toISOString()}: ${JSON.stringify(message)}\n`;
+            errorLogStream.write(fileMessage);
+
             if (logLevel === 'warn' || logLevel === 'info' || logLevel === undefined) {
                 // працює коли в process.env.LOG_LEVEL значення 'info', 'warn' або нічого
                 colorsEnabled ?  console.log (chalk.yellow(moduleName), ...message) : console.log(moduleName, ...message);
@@ -38,6 +46,10 @@ function logger(moduleName) {
         },
 
         error: function (...message){
+            // 3c. Ми пишемо в файли завжди, значить робимо це тут, без перевірки лог левела
+            const fileMessage = `${new Date().toISOString()}: ${JSON.stringify(message)}\n`;
+            errorLogStream.write(fileMessage);
+
             // працює завжди, по умовах задачі у нас немає випадків коли метод error() має бути відключений
             colorsEnabled ?  console.log (chalk.red(moduleName), ...message) : console.log(moduleName, ...message);
         }
