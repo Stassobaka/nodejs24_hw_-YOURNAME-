@@ -9,7 +9,7 @@ logger.error('This is Error', new Error('i am error'));
 logger.warn('This is Warn', { context: 42 });
 
 
-returnDefault.clean() // Очистка папок от всех файлов к начальным условиям задачи
+// returnDefault.clean() // Очистка папок от всех файлов к начальным условиям задачи
 
 // returnDefault.default() // Запись файлов по условию задачи
 
