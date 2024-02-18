@@ -16,8 +16,12 @@ server.on('request', (req, resp) =>{
         resp.write('healthcheck passed')
         logger.info(`${req.method} ${req.url} 200`)
         resp.end()
-    }
-    
-   
-   
+    }else{
+        resp.writeHead(404, 'Not Found')
+        resp.write('healthcheck passed')
+        logger.warn(`${req.method} ${req.url} 404`)
+        resp.end()
+
+    }   
 })
+// Добавили проверки по заданию
