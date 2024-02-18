@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "node ./main.js",
-    "server": "nodemon ./server.js"
+    "server": "nodemon ./server.js",
+    "debug:server": "nodemon --inspect ./server.js"
   },
   "author": "",
   "license": "ISC",
