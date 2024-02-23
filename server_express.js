@@ -5,6 +5,6 @@ const srv = express();
 
 srv.listen(3000, ()=>console.log('Server express running'))
 
-srv.use(morgan(':method :url :status'))
+srv.use(morgan(`Метод: :method\nUrl: :url\nStatus: :status`))
 
 srv.use('/', userStatus)
