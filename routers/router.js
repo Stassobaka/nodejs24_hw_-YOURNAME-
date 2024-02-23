@@ -1,4 +1,6 @@
+
 const router = require('express').Router();
+const validateUser = require('../validate/validate_users')
 
 
 router.get('/', (req, resp)=>{
@@ -15,6 +17,7 @@ router.get('/users/:userId', (req, resp)=>{
 
 
 router.post('/users', (req, resp)=>{
+validateUser(req.body)
     resp.status(400).send('Good job')
 })
 
