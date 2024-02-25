@@ -1,7 +1,13 @@
 [
   { 
-    "username": "John Smith",  
-    "email": "johnsmith32@server.com"
+    "username": "John Smith", 
+    "email": "johnsmith32@server.com",
+    "userId": "1"
+   },
+   { 
+    "username": "John Smith", 
+    "email": "johnsmith32@server.com",
+    "userId": "2"
    }
       
 ]

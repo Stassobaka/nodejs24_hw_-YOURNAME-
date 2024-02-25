@@ -1,7 +1,9 @@
 
 const router = require('express').Router();
-const validateUser = require('../validate/validate_users');
+
 const users = require('../date/users.json')
+const {validateUserGet:validateUserGet} = require('../validate/validate_users');
+const {validateUserGetId:validateUserGetId} = require('../validate/validate_users');
 
 
 router.get('/', (req, resp)=>{
@@ -9,13 +11,14 @@ router.get('/', (req, resp)=>{
 })
 
 router.get('/users', (req, resp)=>{
-    const param = validateUser(users, '/users' )
+    const param = validateUserGet(users, req.url )
     resp.status(param.status).send(param.message)
    
 })
 
 router.get('/users/:userId', (req, resp)=>{
-    resp.status(400).send('Good job')
+    const param = validateUserGetId(users, (req.params.userId))
+    resp.status(param.status).send(param.message)
 })
 
 
