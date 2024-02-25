@@ -5,7 +5,7 @@ const users = require('../date/users.json')
 const {validateUserGet:validateUserGet} = require('../validate/validate_users');
 const {validateUserGetId:validateUserGetId} = require('../validate/validate_users');
 const {validateUserPost:validateUserPost} = require('../validate/validate_users');
-const {newUserList:newUserList} = require('../validate/validate_users');
+const {validateUserDelete:validateUserDelete} = require('../validate/validate_users');
 
 router.get('/', (req, resp)=>{
   resp.status(400).send('Checking')
@@ -33,8 +33,12 @@ router.post('/users', async (req, resp, next) => {
     }
 });
 
-router.delete('/users/:userId ', (req, resp)=>{
-    resp.status(400).send('Good job')
+router.delete( '/users/:userId', (req, resp)=>{
+
+    const param = validateUserDelete((req.params.userId))
+    resp.status(param.status).send(param.message)
+
+    
 })
 
 

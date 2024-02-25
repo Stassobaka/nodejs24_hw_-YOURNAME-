@@ -1,6 +1,6 @@
 const yup = require('yup');
 
-const newUserList =[];
+let newUserList =[];
 
 
 
@@ -16,12 +16,10 @@ if(url === '/users'){
 
 function validateUserGetId(items, id){
 
-
     const parsedId = parseFloat(id)
-    console.log(parsedId > 0 &&  Number.isInteger(parsedId))
+
     if(parsedId > 0 &&  Number.isInteger(parsedId)){
         const foundUser = items.find(item => item.userId === id )
-        console.log(foundUser)
         if(foundUser){
             return{
                 status: 200,
@@ -87,10 +85,46 @@ async function validateUserPost(item, newUser) {
     
 }
 
+
+function validateUserDelete(id) {
+    const parsedId = parseFloat(id)
+    
+    if(parsedId > 0 &&  Number.isInteger(parsedId)){
+
+            const foundUser = newUserList.find(item => item.userId === parsedId)
+            console.log(foundUser)
+            if(foundUser){
+                newUserList = newUserList.filter(item => item.userId !== parsedId)
+                console.log(newUserList);
+                return{
+                    status: 200,
+                    message:`Delete userID: ${id} ` ,
+                }
+
+            }else{
+                return{
+                    status: 404,
+                    message: 'Not found user',
+                }
+
+            }
+
+
+    }else{
+
+        return{
+            status: 400,
+            message: 'Error.The id must be greater than zero or an integer.',
+        }  
+    }
+    
+}
+
+
 module.exports ={
     validateUserGet,
     validateUserGetId,
     validateUserPost,
-    newUserList
+    validateUserDelete
 } 
 
