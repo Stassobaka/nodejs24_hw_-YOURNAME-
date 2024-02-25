@@ -3,18 +3,25 @@ const express = require('express');
 const {router:userStatus} = require('./routers/router')
 const srv = express();
 const jsonBodyParser = express.json();
+const writeJsonUser = require('./date/Adduser')
 
 
 srv.use(jsonBodyParser)
 
-srv.listen(3000, ()=>console.log('Server express running'))
+server = srv.listen(3000, ()=>console.log('Server express running'))
 
 srv.use(morgan(`Метод: :method\nUrl: :url\nStatus: :status`))
 srv.use(morgan('dev'));
 
 srv.use(userStatus);
 
-// process.on('exit', (code) => {
-//     console.log('Событие exit сработало с кодом:', code);
-//     // Ваш код, который нужно выполнить перед завершением процесса
-//   });
+
+srv.post('/shutdown', (req, res) => {
+    writeJsonUser()
+    console.log('Остановка сервера по запросу...');
+    res.send('Сервер останавливается...');
+    server.close(() => {
+      console.log('Сервер успешно остановлен.');
+      process.exit(0); // Для завершения процесса Node.js
+    });
+  });

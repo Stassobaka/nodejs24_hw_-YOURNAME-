@@ -1,5 +1,4 @@
 const yup = require('yup');
-
 let newUserList =[];
 
 
@@ -56,6 +55,7 @@ async function validateUserPost(item, newUser) {
         if(newUserList.length === 0){
             newUser.userId = 1,
             newUserList.push(newUser);
+            
         }else{
             let maxId = -1;
 
@@ -96,6 +96,7 @@ function validateUserDelete(id) {
             if(foundUser){
                 newUserList = newUserList.filter(item => item.userId !== parsedId)
                 console.log(newUserList);
+                
                 return{
                     status: 200,
                     message:`Delete userID: ${id} ` ,
@@ -125,6 +126,7 @@ module.exports ={
     validateUserGet,
     validateUserGetId,
     validateUserPost,
-    validateUserDelete
+    validateUserDelete,
+    newUserList
 } 
 
