@@ -29,22 +29,22 @@ router.get('/users', (req, resp) => {
   resp.status(status).send(message);
 });
 
-router.get('/users/:userId', (req, resp) => {
-  const { status, message } = getUserById(req.params.userId);
+router.get('/users/:userId', async (req, resp) => {
+  const { status, message } = await getUserById(req.params.userId);
   resp.status(status).send(message);
 });
 
-router.post('/users', async (req, resp, next) => {
+router.post('/users', async (req, resp) => {
   try {
-    const { status, message } = await validateUserPost(req.body);
+    const { status, message } = await createUser(req.body);
     resp.status(status).send(message);
   } catch (error) {
     resp.status(500).send('Internal Server Error');
   }
 });
 
-router.delete('/users/:userId', (req, resp) => {
-  const { status, message } = validateUserDelete(req.params.userId);
+router.delete('/users/:userId', async (req, resp) => {
+  const { status, message } = await deleteUser(req.params.userId);
   resp.status(status).send(message);
 });
 

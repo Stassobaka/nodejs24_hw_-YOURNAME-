@@ -9,17 +9,20 @@ const filePath = path.join(dateFolderPath, 'users.json');
 let newUserList = users;
 
 function getUsers() {
+  // тут перевірка на ендпоінт не потрібна була, бо ти ж сам руками вішаєш
+  // цю функцію на той url - він завжди буде таким :)
   return {
     status: 200,
-    message: `All users ${JSON.stringify(users)}`,
+    message: users, // краще повертати не строкою, а як раз джсоном
   };
 }
 
-function getUserById(id) {
-  const parsedId = parseFloat(id);
+async function getUserById(id) {
+  const idCheck = yup.number().min(0).integer();
 
-  if (parsedId > 0 && Number.isInteger(parsedId)) {
-    const foundUser = newUserList.find((item) => item.userId === parsedId);
+  try {
+    const userId = await idCheck.validate(id);
+    const foundUser = newUserList.find((item) => item.userId === userId);
     if (foundUser) {
       return {
         status: 200,
@@ -31,11 +34,11 @@ function getUserById(id) {
         message: 'Not found user',
       };
     }
-  } else {
+  } catch(err) {
     return {
       status: 400,
-      message: 'Error.The id must be greater than zero or an integer.',
-    };
+      message: 'Error. The id must be an integer.',
+    }
   }
 }
 
@@ -47,24 +50,18 @@ async function createUser(newUser) {
 
   try {
     await userCheck.validate(newUser, { abortEarly: false });
-    if (newUserList.length === 0) {
-      (newUser.userId = 1), newUserList.push(newUser);
-    } else {
-      let maxId = -1;
 
-      for (let i = 0; i < newUserList.length; i++) {
-        if (newUserList[i].userId > maxId) {
-          maxId = newUserList[i].userId;
-          console.log(maxId);
-        }
-      }
-      (newUser.userId = maxId + 1), newUserList.push(newUser);
-      console.log(newUserList);
-    }
+    let maxId = Math.max(
+      ...newUserList.map((user) => user.userId)
+    );
 
+    newUser.userId = maxId + 1;
+    newUserList.push(newUser);
+
+    console.log(newUserList);
     return {
-      status: 200,
-      message: 'Add user',
+      status: 201, // краще 201, бо це як раз статус CREATED, а 200 це просто ОК
+      message: newUser, // треба повернути створеного юзера з його новим айді!
     };
   } catch (error) {
     return {
@@ -74,36 +71,24 @@ async function createUser(newUser) {
   }
 }
 
-function deleteUser(id) {
-  try {
-    const parsedId = parseFloat(id);
-
-    if (parsedId > 0 && Number.isInteger(parsedId)) {
-      const foundUser = newUserList.find((item) => item.userId === parsedId);
-
-      if (foundUser) {
-        newUserList = newUserList.filter((item) => item.userId !== parsedId);
-        console.log(newUserList);
-
-        return {
-          status: 200,
-          message: `Delete userID: ${id}`,
-        };
-      } else {
-        return {
-          status: 404,
-          message: 'Not found user',
-        };
-      }
-    } else {
-      throw new Error('The id must be greater than zero or an integer.');
-    }
-  } catch (error) {
+async function deleteUser(id) {
+  // в нас вже є вся логіка пошуку юзера, давай просто перевикористаємо
+  const { message, status } = await getUserById(id);
+  if (status !== 200) {
     return {
-      status: 400,
-      message: `Error: ${error.message}`,
-    };
+      status,
+      message
+    }
   }
+
+  const user = message;
+  newUserList = newUserList.filter((item) => item.userId !== user.userId);
+  console.log(newUserList);
+
+  return {
+    status: 200,
+    message: `Delete userID: ${id}`,
+  };
 }
 
 function writeJsonUser() {
