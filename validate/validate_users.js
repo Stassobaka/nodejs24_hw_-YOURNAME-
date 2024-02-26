@@ -1,5 +1,10 @@
 const yup = require('yup');
-let newUserList =[];
+const fs = require('fs');
+const path = require('path');
+const users = require('../date/users.json');
+const dateFolderPath = path.join('.', 'date');
+const filePath = path.join(dateFolderPath, 'users.json');
+let newUserList = users;
 
 
 
@@ -87,46 +92,53 @@ async function validateUserPost(item, newUser) {
 
 
 function validateUserDelete(id) {
-    const parsedId = parseFloat(id)
-    
-    if(parsedId > 0 &&  Number.isInteger(parsedId)){
+    try {
+        const parsedId = parseFloat(id);
+        
+        if (parsedId > 0 && Number.isInteger(parsedId)) {
+            const foundUser = newUserList.find(item => item.userId === parsedId);
 
-            const foundUser = newUserList.find(item => item.userId === parsedId)
-            console.log(foundUser)
-            if(foundUser){
-                newUserList = newUserList.filter(item => item.userId !== parsedId)
+            if (foundUser) {
+                newUserList = newUserList.filter(item => item.userId !== parsedId);
                 console.log(newUserList);
-                
-                return{
-                    status: 200,
-                    message:`Delete userID: ${id} ` ,
-                }
 
-            }else{
-                return{
+                return {
+                    status: 200,
+                    message: `Delete userID: ${id}`,
+                };
+            } else {
+                return {
                     status: 404,
                     message: 'Not found user',
-                }
-
+                };
             }
-
-
-    }else{
-
-        return{
+        } else {
+            throw new Error('The id must be greater than zero or an integer.');
+        }
+    } catch (error) {
+        return {
             status: 400,
-            message: 'Error.The id must be greater than zero or an integer.',
-        }  
+            message: `Error: ${error.message}`,
+        };
     }
-    
 }
 
+
+
+
+
+function writeJsonUser() {
+
+fs.writeFileSync(filePath, JSON.stringify(newUserList))
+
+}
 
 module.exports ={
     validateUserGet,
     validateUserGetId,
     validateUserPost,
     validateUserDelete,
-    newUserList
+    newUserList,
+    writeJsonUser
 } 
 

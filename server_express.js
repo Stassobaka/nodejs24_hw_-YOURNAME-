@@ -3,7 +3,7 @@ const express = require('express');
 const {router:userStatus} = require('./routers/router')
 const srv = express();
 const jsonBodyParser = express.json();
-const writeJsonUser = require('./date/Adduser')
+const {writeJsonUser:writeJsonUser} = require('./validate/validate_users');
 
 
 srv.use(jsonBodyParser)
