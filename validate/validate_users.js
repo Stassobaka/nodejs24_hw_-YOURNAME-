@@ -8,22 +8,22 @@ let newUserList = users;
 
 
 
-function validateUserGet(items, url){
+function validateUserGet( url){
 if(url === '/users'){
     return {
         status: 200,
-        message: "All users"
+        message: `All users ${JSON.stringify(users)}`
     }
 }
 }
 
 
-function validateUserGetId(items, id){
+function validateUserGetId( id){
 
     const parsedId = parseFloat(id)
 
     if(parsedId > 0 &&  Number.isInteger(parsedId)){
-        const foundUser = items.find(item => item.userId === id )
+        const foundUser = newUserList.find(item => item.userId === parsedId )
         if(foundUser){
             return{
                 status: 200,
@@ -49,7 +49,7 @@ function validateUserGetId(items, id){
 
 }
 
-async function validateUserPost(item, newUser) {
+async function validateUserPost( newUser) {
     const userCheck = yup.object().shape({
         username: yup.string().required('Username is required'),
         email: yup.string().email('Invalid email format').required('Email is required'),

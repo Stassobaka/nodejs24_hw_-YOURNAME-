@@ -17,11 +17,11 @@ srv.use(userStatus);
 
 
 srv.post('/shutdown', (req, res) => {
-    writeJsonUser()
-    console.log('Остановка сервера по запросу...');
-    res.send('Сервер останавливается...');
-    server.close(() => {
+  writeJsonUser();
+  console.log('Остановка сервера по запросу...');
+  res.send('Сервер останавливается...');
+  server.close(() => {
       console.log('Сервер успешно остановлен.');
       process.exit(0); // Для завершения процесса Node.js
-    });
   });
+});
