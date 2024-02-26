@@ -8,16 +8,14 @@ const filePath = path.join(dateFolderPath, 'users.json');
 
 let newUserList = users;
 
-function validateUserGet(url) {
-  if (url === '/users') {
-    return {
-      status: 200,
-      message: `All users ${JSON.stringify(users)}`,
-    };
-  }
+function getUsers() {
+  return {
+    status: 200,
+    message: `All users ${JSON.stringify(users)}`,
+  };
 }
 
-function validateUserGetId(id) {
+function getUserById(id) {
   const parsedId = parseFloat(id);
 
   if (parsedId > 0 && Number.isInteger(parsedId)) {
@@ -41,7 +39,7 @@ function validateUserGetId(id) {
   }
 }
 
-async function validateUserPost(newUser) {
+async function createUser(newUser) {
   const userCheck = yup.object().shape({
     username: yup.string().required('Username is required'),
     email: yup.string().email('Invalid email format').required('Email is required'),
@@ -76,7 +74,7 @@ async function validateUserPost(newUser) {
   }
 }
 
-function validateUserDelete(id) {
+function deleteUser(id) {
   try {
     const parsedId = parseFloat(id);
 
@@ -113,10 +111,10 @@ function writeJsonUser() {
 }
 
 module.exports = {
-  validateUserGet,
-  validateUserGetId,
-  validateUserPost,
-  validateUserDelete,
+  getUsers,
+  getUserById,
+  createUser,
+  deleteUser,
   newUserList,
   writeJsonUser,
 };

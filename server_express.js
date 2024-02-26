@@ -2,7 +2,7 @@ const morgan = require('morgan');
 const express = require('express');
 
 const { router: userStatus } = require('./routers/router');
-const { writeJsonUser: writeJsonUser } = require('./validate/validate_users');
+const { writeJsonUser: writeJsonUser } = require('./controllers/users_controller');
 
 const srv = express();
 const jsonBodyParser = express.json();
@@ -16,6 +16,7 @@ srv.use(morgan('dev'));
 
 srv.use(userStatus);
 
+//! оце взагалі топ ідея - спеціальний ендпоінт щоб попросити сервер виключитись
 srv.post('/shutdown', (req, res) => {
   writeJsonUser();
   console.log('Остановка сервера по запросу...');
