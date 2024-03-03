@@ -82,10 +82,11 @@ async function deleteUser(id) {
     }
   }
 
-  const user = message;
-  newUserList = newUserList.filter((item) => item.userId !== user.userId);
-  console.log(newUserList);
-
+  // const user = message;
+  // newUserList = newUserList.filter((item) => item.userId !== user.userId);
+  // console.log(newUserList);
+  await knex('users').where({id:id}).del()
+  
   return {
     status: 200,
     message: `Delete userID: ${id}`,
