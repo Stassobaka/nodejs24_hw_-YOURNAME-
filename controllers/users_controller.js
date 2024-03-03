@@ -6,14 +6,20 @@ const users = require('../date/users.json');
 const dateFolderPath = path.join('.', 'date');
 const filePath = path.join(dateFolderPath, 'users.json');
 
+const knexLib = require('knex')
+const knexConfig = require('../knexfile')
+const knex = knexLib(knexConfig)
+
 let newUserList = users;
 
-function getUsers() {
+async function getUsers() {
   // тут перевірка на ендпоінт не потрібна була, бо ти ж сам руками вішаєш
   // цю функцію на той url - він завжди буде таким :)
+
+  const result = await knex.select().from('users')
   return {
     status: 200,
-    message: users, // краще повертати не строкою, а як раз джсоном
+    message: result, // краще повертати не строкою, а як раз джсоном
   };
 }
 
@@ -22,7 +28,8 @@ async function getUserById(id) {
 
   try {
     const userId = await idCheck.validate(id);
-    const foundUser = newUserList.find((item) => item.userId === userId);
+    const result = await knex.select().from('users')
+    const foundUser = result.find((item) => item.id === userId);
     if (foundUser) {
       return {
         status: 200,
@@ -50,18 +57,12 @@ async function createUser(newUser) {
 
   try {
     await userCheck.validate(newUser, { abortEarly: false });
-
-    let maxId = Math.max(
-      ...newUserList.map((user) => user.userId)
-    );
-
-    newUser.userId = maxId + 1;
-    newUserList.push(newUser);
+    const [result] = await knex('users').insert(newUser).returning('*')
 
     console.log(newUserList);
     return {
       status: 201, // краще 201, бо це як раз статус CREATED, а 200 це просто ОК
-      message: newUser, // треба повернути створеного юзера з його новим айді!
+      message: result, // треба повернути створеного юзера з його новим айді!
     };
   } catch (error) {
     return {
@@ -81,15 +82,31 @@ async function deleteUser(id) {
     }
   }
 
-  const user = message;
-  newUserList = newUserList.filter((item) => item.userId !== user.userId);
-  console.log(newUserList);
-
+  await knex('users').where({id:id}).del()
+  
   return {
     status: 200,
     message: `Delete userID: ${id}`,
   };
 }
+
+async function deleteUserAll() {
+  try {
+    const result = await knex('users').del();
+    return {
+      status: 200,
+      message: `Successfully deleted ${result} user(s)`,
+    };
+  } catch (error) {
+    console.error(`Error deleting all users: ${error.message}`);
+    return {
+      status: 500,
+      message: 'Internal Server Error',
+    };
+  }
+}
+
+
 
 function writeJsonUser() {
   fs.writeFileSync(filePath, JSON.stringify(newUserList));
@@ -101,5 +118,5 @@ module.exports = {
   createUser,
   deleteUser,
   newUserList,
-  writeJsonUser,
+  deleteUserAll,
 };
