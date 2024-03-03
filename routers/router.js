@@ -27,7 +27,6 @@ router.get('/', (req, resp) => {
 router.get('/users', async (req, resp) => {
   try{
     const { status, message } = await getUsers();
-    console.log(message)
     resp.status(status).send(message);
   }catch (error) {
     resp.status(500).send('Internal Server Error');

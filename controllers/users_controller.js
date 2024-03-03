@@ -28,7 +28,8 @@ async function getUserById(id) {
 
   try {
     const userId = await idCheck.validate(id);
-    const foundUser = newUserList.find((item) => item.userId === userId);
+    const result = await knex.select().from('users')
+    const foundUser = result.find((item) => item.id === userId);
     if (foundUser) {
       return {
         status: 200,
