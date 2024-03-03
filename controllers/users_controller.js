@@ -6,6 +6,10 @@ const users = require('../date/users.json');
 const dateFolderPath = path.join('.', 'date');
 const filePath = path.join(dateFolderPath, 'users.json');
 
+const knexLib = require('knex')
+const knexConfig = require('../knexfile')
+const knex = knexLib(knexConfig)
+
 let newUserList = users;
 
 function getUsers() {
@@ -50,13 +54,7 @@ async function createUser(newUser) {
 
   try {
     await userCheck.validate(newUser, { abortEarly: false });
-
-    let maxId = Math.max(
-      ...newUserList.map((user) => user.userId)
-    );
-
-    newUser.userId = maxId + 1;
-    newUserList.push(newUser);
+    const result = await knex('users').insert(newUser)
 
     console.log(newUserList);
     return {
