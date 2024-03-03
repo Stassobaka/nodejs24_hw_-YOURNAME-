@@ -82,9 +82,6 @@ async function deleteUser(id) {
     }
   }
 
-  // const user = message;
-  // newUserList = newUserList.filter((item) => item.userId !== user.userId);
-  // console.log(newUserList);
   await knex('users').where({id:id}).del()
   
   return {
@@ -92,6 +89,24 @@ async function deleteUser(id) {
     message: `Delete userID: ${id}`,
   };
 }
+
+async function deleteUserAll() {
+  try {
+    const result = await knex('users').del();
+    return {
+      status: 200,
+      message: `Successfully deleted ${result} user(s)`,
+    };
+  } catch (error) {
+    console.error(`Error deleting all users: ${error.message}`);
+    return {
+      status: 500,
+      message: 'Internal Server Error',
+    };
+  }
+}
+
+
 
 function writeJsonUser() {
   fs.writeFileSync(filePath, JSON.stringify(newUserList));
@@ -103,5 +118,5 @@ module.exports = {
   createUser,
   deleteUser,
   newUserList,
-  writeJsonUser,
+  deleteUserAll,
 };

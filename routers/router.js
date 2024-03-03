@@ -18,7 +18,7 @@ const router = require('express').Router();
 
 // З врахуванням коментів вище, я роблю перейменування (в тому числі і самих функцій)
 // і спрощую імпорт:
-const {getUsers, getUserById, createUser, deleteUser } = require('../controllers/users_controller');
+const {getUsers, getUserById, createUser, deleteUser,deleteUserAll } = require('../controllers/users_controller');
 
 router.get('/', (req, resp) => {
   resp.status(400).send('Checking');
@@ -48,10 +48,17 @@ router.post('/users', async (req, resp) => {
   }
 });
 
+router.delete('/users/all', async (req, resp) => {
+  const { status, message } = await deleteUserAll();
+  resp.status(status).send(message);
+});
+
 router.delete('/users/:userId', async (req, resp) => {
   const { status, message } = await deleteUser(req.params.userId);
   resp.status(status).send(message);
 });
+
+
 
 module.exports = {
   router,
