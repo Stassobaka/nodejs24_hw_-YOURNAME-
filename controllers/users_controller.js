@@ -12,12 +12,14 @@ const knex = knexLib(knexConfig)
 
 let newUserList = users;
 
-function getUsers() {
+async function getUsers() {
   // тут перевірка на ендпоінт не потрібна була, бо ти ж сам руками вішаєш
   // цю функцію на той url - він завжди буде таким :)
+
+  const result = await knex.select().from('users')
   return {
     status: 200,
-    message: users, // краще повертати не строкою, а як раз джсоном
+    message: result, // краще повертати не строкою, а як раз джсоном
   };
 }
 
@@ -54,12 +56,12 @@ async function createUser(newUser) {
 
   try {
     await userCheck.validate(newUser, { abortEarly: false });
-    const result = await knex('users').insert(newUser)
+    const [result] = await knex('users').insert(newUser).returning('*')
 
     console.log(newUserList);
     return {
       status: 201, // краще 201, бо це як раз статус CREATED, а 200 це просто ОК
-      message: newUser, // треба повернути створеного юзера з його новим айді!
+      message: result, // треба повернути створеного юзера з його новим айді!
     };
   } catch (error) {
     return {

@@ -24,9 +24,15 @@ router.get('/', (req, resp) => {
   resp.status(400).send('Checking');
 });
 
-router.get('/users', (req, resp) => {
-  const { status, message } = getUsers();
-  resp.status(status).send(message);
+router.get('/users', async (req, resp) => {
+  try{
+    const { status, message } = await getUsers();
+    console.log(message)
+    resp.status(status).send(message);
+  }catch (error) {
+    resp.status(500).send('Internal Server Error');
+  }
+ 
 });
 
 router.get('/users/:userId', async (req, resp) => {
